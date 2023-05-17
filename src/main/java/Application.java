@@ -5,31 +5,29 @@ import java.util.List;
 
 public class Application {
     public static void main(String[] args) throws SQLException {
-       		// Создаем объект класса ДАО
-        JobsDAO jobsDAO = new JobsDAOImpl();
+       		    JobsDAO jobsDAO = new JobsDAOImpl();
+        CityDAO cityDao = new CityDAOImpl();
 
-        Jobs jobs1 = new Jobs("Ivan Redov", "men", 22);
-				// Создаем объект
-        jobsDAO.create(jobs1);
+        City city1 = new City("Novgorod",1);
+        cityDao.createCity(city1);
 
-				// Получаем объект по id
-        System.out.println(jobsDAO.readById(1));
 
-				// Получаем полный список объектов
-        List<Jobs> list = jobsDAO.readAll();
+        //При запуске приложения обе таблицы - jobs и city - пустые
+        // добавляя город, мы не указываем его id - он устанавливается БД самостоятельно
+        //Значит, мы можем получить его id, чтобы этот город (как объект) - указать как поле класса Jobs
+        City cityForJobs = cityDao.getByIdCity(1);
 
-        for (Jobs jobs : list) {
-            System.out.println(jobs);
-        }
+        //Создаем объект employee
+        Jobs jobs = new Jobs(1, "Darya Ivanova", "woman", 25);
 
-        Jobs jobs2 = new Jobs(5, "Fedor Ivanovich", "men", 56);
+        //Заполняем поле city в объекте jobs
+        jobs.setId(city1.getId());
 
-				// Изменяем объект
-        jobsDAO.updateAgeById(jobs2);
+        //Добавим jobs в БД
+        jobsDAO.create(jobs);
 
-				// Удаляем объект
-        jobsDAO.delete(jobs2);
-
+        //Удалим cityForJobs
+        cityDao.deleteCity(cityForJobs);
     }
 }
 

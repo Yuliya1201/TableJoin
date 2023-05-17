@@ -1,8 +1,25 @@
+import jakarta.persistence.*;
+
 import java.util.Objects;
+@Entity
+@Table(name = "city")
 
 public class City {
-    private String city_name;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name ="id")
     private int id;
+    @Column(name = "city_name")
+    private String city_name;
+
+    @ManyToOne
+    @JoinColumn(name = "city_name",nullable = false)
+    private Jobs jobs;
+
+    public City() {
+
+    }
 
     public City (String city_name, Integer id) {
         this.city_name = city_name;
@@ -24,6 +41,7 @@ public class City {
     public void setId(int id) {
         this.id = id;
     }
+
 
     @Override
     public boolean equals(Object o) {

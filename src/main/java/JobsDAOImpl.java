@@ -39,13 +39,12 @@ public class JobsDAOImpl implements JobsDAO {
 }
 
 
-        @Override
-        public List<Jobs> readAll () {
-
-            List<Jobs> users = (List<Jobs>) HibernateSessionFactoryUtil.getSessionFactory().openSession()
-                    .createQuery("From Jobs").list();
-            return users;
+         @Override
+    public List<Jobs> getAllJobs() {
+        try (Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession()) {
+            return session.createQuery( "FROM Employee").list();
         }
+    }
 
 
 

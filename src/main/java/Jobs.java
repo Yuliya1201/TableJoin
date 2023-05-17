@@ -1,6 +1,6 @@
 import jakarta.persistence.*;
 
-import java.util.Objects;
+import java.util.*;
 
 @Entity
 @Table(name = "jobs")
@@ -19,8 +19,10 @@ public class Jobs {
     @Column(name = "age")
     private int age;
 
-
-
+    @OneToMany(mappedBy = "jobs")
+    private Set<City>city_name;
+    @OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
+    private Set<City>getCity_name;
 
     public Jobs() {
     }

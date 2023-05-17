@@ -10,7 +10,7 @@ public interface JobsDAO {
 
      Jobs readById(int id);
 
-     List<Jobs> readAll();
+     List<Jobs> getAllJobs();
 
      void updateAgeById(Jobs jobs);
      void delete(Jobs jobs);
