@@ -5,51 +5,29 @@ import java.util.List;
 
 public class Application {
     public static void main(String[] args) throws SQLException {
-        final String user = "postgres";
-        final String password = "1201";
-        final String url = "jdbc:postgresql://localhost:5432/skypro";
+       		    JobsDAO jobsDAO = new JobsDAOImpl();
+        CityDAO cityDao = new CityDAOImpl();
 
-        try (final Connection connection = DriverManager.getConnection(url, password, user)) {
-            try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM jobs WHERE id = (?)")) {
-                statement.setInt(2, 4);
-                final ResultSet resultSet = statement.executeQuery();
-                while (resultSet.next()) {
-                    String name = "name: " + resultSet.getString("name");
-                    String gender = "gender: " + resultSet.getString("gender");
-                    String town = "town: " + resultSet.getString("town");
-                    int age = resultSet.getInt(5);
-
-                    System.out.println(name);
-                    System.out.println(gender);
-                    System.out.println(town);
-                    System.out.println(age);
+        City city1 = new City("Novgorod",1);
+        cityDao.createCity(city1);
 
 
-                    try (Connection connection = DriverManager.getConnection(url, user, password)) {
+        //При запуске приложения обе таблицы - jobs и city - пустые
+        // добавляя город, мы не указываем его id - он устанавливается БД самостоятельно
+        //Значит, мы можем получить его id, чтобы этот город (как объект) - указать как поле класса Jobs
+        City cityForJobs = cityDao.getByIdCity(1);
 
-                        // Создаем объект класса JobsDAOImpl
-                        JobsDAO jobsDAO = new JobsDAOImpl(connection);
+        //Создаем объект employee
+        Jobs jobs = new Jobs(1, "Darya Ivanova", "woman", 25);
 
-                        City city = new City("Volgogdar", 1);
-                        Jobs jobs = new Jobs("Anna Ivanovna", "girl", 56);
+        //Заполняем поле city в объекте jobs
+        jobs.setId(city1.getId());
 
-                        // Вызываем метод добавления объекта
-                        jobsDAO.create(jobs);
+        //Добавим jobs в БД
+        jobsDAO.create(jobs);
 
-                        // Создаем список наполняя его объектами, которые получаем
-                        // путем вызова метода для получения всех элементов таблицы
-                        List<Jobs> list = new ArrayList<>(jobsDAO.readAll());
-
-                        // Выведем список в консоль
-                        for (Jobs jobs1 : list) {
-                            System.out.println(jobs);
-                        }
-
-                    }
-
-
-                }
-            }
-        }
+        //Удалим cityForJobs
+        cityDao.deleteCity(cityForJobs);
     }
 }
+

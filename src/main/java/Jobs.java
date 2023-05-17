@@ -1,14 +1,30 @@
-import java.util.Objects;
+import jakarta.persistence.*;
+
+import java.util.*;
+
+@Entity
+@Table(name = "jobs")
 
 public class Jobs {
 
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private int id;
+    @Column(name = "name")
     private String name;
+    @Column(name = "gender")
     private String gender;
+    @Column(name = "age")
     private int age;
 
-    public Jobs(String gender) {
+    @OneToMany(mappedBy = "jobs")
+    private Set<City>city_name;
+    @OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
+    private Set<City>getCity_name;
+
+    public Jobs() {
     }
 
     public Jobs(String name, String gender, int age) {
